@@ -5,7 +5,7 @@ from flask import Flask, request, jsonify, render_template_string
 app = Flask(__name__)
 
 # OpenRouter Configuration
-OPENROUTER_API_KEY = os.getenv("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")
+OPENROUTER_API_KEY = os.getenv("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")
 # Using a free model available in 2026
 MODEL_ID = "deepseek/deepseek-r1:free" 
 
