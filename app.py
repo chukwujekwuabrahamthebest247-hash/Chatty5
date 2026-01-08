@@ -5,13 +5,16 @@ from flask import Flask, request, jsonify, render_template_string
 app = Flask(__name__)
 
 # OpenRouter Configuration
-OPENROUTER_API_KEY = os.getenv("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")
-# Using a free model available in 2026
-MODEL_ID = "deepseek/deepseek-r1:free" 
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
+
+if not OPENROUTER_API_KEY:
+    raise ValueError("ERROR: OPENROUTER_API_KEY is not set in environment variables.")
+
+# Free model available
+MODEL_ID = "deepseek/deepseek-r1:free"
 
 @app.route('/')
 def home():
-    # Simple UI for testing
     return render_template_string('''
         <h1>OpenRouter Chatbot</h1>
         <input type="text" id="userInput" placeholder="Type here...">
@@ -37,7 +40,9 @@ def chat():
     
     headers = {
         "Authorization": f"Bearer {OPENROUTER_API_KEY}",
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "HTTP-Referer": "yourapp.example",
+        "X-Title": "My Chatbot App"
     }
     
     payload = {
@@ -58,6 +63,5 @@ def chat():
         return jsonify({"reply": "Error: " + response.text}), 500
 
 if __name__ == "__main__":
-    # Railway expects the app to run on a specific port
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)
